@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIFA 2026 × Web3 — Campaign Intelligence & Outreach Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060810;
+    --surface: #0d1120;
+    --surface2: #141928;
+    --green: #00f57a;
+    --yellow: #f5c800;
+    --red: #ff3c3c;
+    --blue: #3d8bff;
+    --cyan: #00e5ff;
+    --text: #e8ecf4;
+    --muted: #6b7899;
+    --border: rgba(255,255,255,0.07);
+    --glow: rgba(0,245,122,0.15);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; line-height:1.6; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    min-height: 340px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center;
+    padding: 60px 24px 40px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,245,122,0.13) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 80% 80%, rgba(61,139,255,0.1) 0%, transparent 60%);
+    pointer-events:none;
+  }
+  .badge {
+    display:inline-flex; align-items:center; gap:8px;
+    background:rgba(0,245,122,0.1); border:1px solid rgba(0,245,122,0.3);
+    color:var(--green); font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px;
+    padding:6px 16px; border-radius:100px; margin-bottom:20px;
+  }
+  .badge::before { content:'⚽'; }
+  h1 {
+    font-family:'Bebas Neue',sans-serif;
+    font-size: clamp(42px, 7vw, 86px);
+    letter-spacing: 2px; line-height:0.95;
+    background: linear-gradient(135deg, #fff 30%, var(--green) 80%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom:16px;
+  }
+  .hero-sub {
+    color:var(--muted); font-size:15px; max-width:560px;
+    font-weight:300; line-height:1.7;
+  }
+  .stats-row {
+    display:flex; gap:32px; justify-content:center; margin-top:32px; flex-wrap:wrap;
+  }
+  .stat { text-align:center; }
+  .stat-num { font-family:'Bebas Neue',sans-serif; font-size:36px; color:var(--green); letter-spacing:1px; }
+  .stat-label { font-size:11px; color:var(--muted); letter-spacing:1.5px; text-transform:uppercase; }
+
+  /* TABS */
+  .tabs {
+    display:flex; gap:4px; padding:24px 32px 0;
+    border-bottom:1px solid var(--border);
+    overflow-x:auto; flex-wrap:wrap;
+  }
+  .tab {
+    padding:10px 20px; border-radius:8px 8px 0 0;
+    font-size:13px; font-weight:500; cursor:pointer; border:none;
+    background:transparent; color:var(--muted);
+    transition:all .2s; white-space:nowrap;
+    border-bottom:2px solid transparent;
+  }
+  .tab:hover { color:var(--text); background:var(--surface2); }
+  .tab.active { color:var(--green); border-bottom-color:var(--green); background:var(--surface2); }
+
+  /* CONTENT PANELS */
+  .panel { display:none; padding:32px; }
+  .panel.active { display:block; }
+
+  /* SECTION HEADER */
+  .section-header { display:flex; align-items:center; gap:12px; margin-bottom:24px; }
+  .section-header h2 {
+    font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:1px; color:var(--text);
+  }
+  .section-desc { color:var(--muted); font-size:13px; margin-top:4px; }
+
+  /* COUNTRY BLOCK */
+  .country-block { margin-bottom:36px; }
+  .country-label {
+    display:flex; align-items:center; gap:10px;
+    font-family:'Space Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--muted); margin-bottom:12px;
+    padding-bottom:8px; border-bottom:1px solid var(--border);
+  }
+  .flag { font-size:20px; }
+
+  /* COMPANY CARDS GRID */
+  .cards-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px;
+  }
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:18px 20px;
+    transition:border-color .2s, transform .2s;
+    position:relative; overflow:hidden;
+  }
+  .card:hover { border-color:rgba(0,245,122,0.3); transform:translateY(-2px); }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+    opacity:0; transition:opacity .2s;
+  }
+  .card:hover::before { opacity:1; }
+  .card-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
+  .company-name { font-weight:600; font-size:14px; color:var(--text); }
+  .tag {
+    font-size:10px; font-family:'Space Mono',monospace; letter-spacing:1px;
+    padding:3px 8px; border-radius:4px; white-space:nowrap;
+  }
+  .tag-exchange { background:rgba(61,139,255,0.15); color:var(--blue); border:1px solid rgba(61,139,255,0.2); }
+  .tag-defi { background:rgba(0,229,255,0.1); color:var(--cyan); border:1px solid rgba(0,229,255,0.2); }
+  .tag-nft { background:rgba(245,200,0,0.1); color:var(--yellow); border:1px solid rgba(245,200,0,0.2); }
+  .tag-prediction { background:rgba(255,60,60,0.1); color:var(--red); border:1px solid rgba(255,60,60,0.2); }
+  .tag-fan { background:rgba(0,245,122,0.1); color:var(--green); border:1px solid rgba(0,245,122,0.2); }
+  .tag-betting { background:rgba(200,100,255,0.1); color:#c864ff; border:1px solid rgba(200,100,255,0.2); }
+  .tag-infra { background:rgba(255,150,0,0.1); color:#ff9600; border:1px solid rgba(255,150,0,0.2); }
+  .card-desc { font-size:12px; color:var(--muted); line-height:1.6; }
+  .card-campaign {
+    margin-top:10px; padding:8px 10px;
+    background:rgba(0,245,122,0.05); border-left:2px solid var(--green);
+    font-size:11px; color:rgba(232,236,244,0.8); border-radius:0 4px 4px 0;
+  }
+
+  /* EMAIL TEMPLATE */
+  .email-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; max-width:720px; margin:0 auto;
+    overflow:hidden;
+  }
+  .email-header {
+    background: linear-gradient(135deg, var(--surface2), #1a2240);
+    padding:24px 28px; border-bottom:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+  }
+  .email-meta { font-size:12px; color:var(--muted); font-family:'Space Mono',monospace; }
+  .email-meta span { color:var(--text); }
+  .email-body { padding:28px; }
+  .email-subject {
+    font-size:18px; font-weight:600; margin-bottom:20px; color:var(--text);
+    padding-bottom:16px; border-bottom:1px solid var(--border);
+  }
+  .email-body p { color:rgba(232,236,244,0.85); font-size:14px; line-height:1.85; margin-bottom:14px; }
+  .email-body strong { color:var(--text); }
+  .bullet-list { list-style:none; margin:12px 0 16px; }
+  .bullet-list li {
+    padding:6px 0 6px 20px; font-size:13px; color:rgba(232,236,244,0.8);
+    position:relative; border-bottom:1px dashed rgba(255,255,255,0.05);
+  }
+  .bullet-list li::before { content:'→'; position:absolute; left:0; color:var(--green); }
+  .copy-btn {
+    display:inline-flex; align-items:center; gap:8px;
+    background:var(--green); color:#060810; border:none; border-radius:8px;
+    padding:10px 20px; font-weight:600; font-size:13px; cursor:pointer;
+    margin-top:8px; transition:all .2s;
+  }
+  .copy-btn:hover { background:#00d468; transform:translateY(-1px); }
+
+  /* SUMMARY TABLE */
+  .summary-table { width:100%; border-collapse:collapse; }
+  .summary-table th {
+    background:var(--surface2); color:var(--muted);
+    font-size:11px; letter-spacing:1.5px; text-transform:uppercase;
+    padding:12px 16px; text-align:left; font-family:'Space Mono',monospace;
+    border-bottom:1px solid var(--border);
+  }
+  .summary-table td {
+    padding:12px 16px; font-size:13px; border-bottom:1px solid var(--border);
+    vertical-align:middle;
+  }
+  .summary-table tr:hover td { background:rgba(255,255,255,0.02); }
+  .company-cell { font-weight:500; }
+  .country-cell { color:var(--muted); font-size:12px; }
+
+  /* RESPONSIVE */
+  @media(max-width:640px) {
+    .tabs { padding:16px 16px 0; }
+    .panel { padding:20px 16px; }
+    .cards-grid { grid-template-columns:1fr; }
+    .email-header { flex-direction:column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">FIFA 2026 × WEB3 INTELLIGENCE REPORT</div>
+  <h1>CRYPTO CAMPAIGNS<br>AROUND FIFA 2026</h1>
+  <p class="hero-sub">A country-wise intelligence database of 50+ Web3 companies running FIFA World Cup 2026 campaigns — plus a ready-to-send outreach pitch for your offer page.</p>
+  <div class="stats-row">
+    <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Web3 Companies</div></div>
+    <div class="stat"><div class="stat-num">20+</div><div class="stat-label">Countries</div></div>
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Campaign Types</div></div>
+    <div class="stat"><div class="stat-num">$1.2B+</div><div class="stat-label">Market Volume</div></div>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="showPanel('campaigns')">🌍 Campaigns by Country</button>
+  <button class="tab" onclick="showPanel('summary')">📊 Full Company List</button>
+  <button class="tab" onclick="showPanel('email')">✉️ Outreach Email</button>
+  <button class="tab" onclick="showPanel('strategy')">🎯 Pitch Strategy</button>
+</div>
+
+<!-- CAMPAIGNS PANEL -->
+<div class="panel active" id="panel-campaigns">
+  <div class="section-header">
+    <div>
+      <h2>FIFA 2026 Web3 Campaigns by Country</h2>
+      <div class="section-desc">Sorted by region. Campaign types: Exchange · DeFi · NFT/Collectibles · Fan Token · Prediction Market · Betting · Infrastructure</div>
+    </div>
+  </div>
+
+  <!-- ARGENTINA -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇦🇷</span> Argentina — Most Active Web3 Football Nation</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">LBank Exchange</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Signed multi-year partnership with AFA (Argentine Football Association) in Sep 2025. Launched $100M reward pool campaign globally.</div>
+        <div class="card-campaign">⚡ $100M prize pool, jersey giveaways, trading competitions tied to Argentina matches</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Nexo</div><span class="tag tag-defi">DeFi / CeFi</span></div>
+        <div class="card-desc">Became Official Regional Digital Asset Partner of Argentine National Football Team. Running giveaway campaigns for World Cup tickets & Messi-signed jerseys.</div>
+        <div class="card-campaign">⚡ Win WC tickets, signed jerseys — runs May 2026 through end of tournament</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bybit</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Official partner of the Argentine Football Association for 2026. Cross-leveraging their F1 presence (Red Bull Racing) with Argentine team.</div>
+        <div class="card-campaign">⚡ Joint AFA sponsorship, user campaigns across LATAM markets</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Ant International</div><span class="tag tag-infra">FINTECH</span></div>
+        <div class="card-desc">Became Official Sponsor of Argentine National Football Team for the Asia region in March 2026. Alipay parent company's international arm.</div>
+        <div class="card-campaign">⚡ Asia-region digital payment campaign tied to Argentina World Cup campaign</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios / Chiliz (CHZ)</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">$ARG fan token on Chiliz Chain. Expected massive engagement as Argentina are defending champions. Voting, VIP rewards, exclusive promos.</div>
+        <div class="card-campaign">⚡ $ARG token engagement campaign, fan polls, match-day rewards</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">BingX</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Named Enzo Fernández (Argentina midfielder) as global brand ambassador ahead of FIFA World Cup 2026. Major football × crypto crossover campaign.</div>
+        <div class="card-campaign">⚡ Enzo Fernández ambassador deal, social/digital campaigns pre-tournament</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL / MULTI-COUNTRY -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🌐</span> Global / Multi-Country Campaigns</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">ADI Predictstreet</div><span class="tag tag-prediction">PREDICTION</span></div>
+        <div class="card-desc">FIFA's OFFICIAL Prediction Market Partner for 2026 World Cup — a first in FIFA history. Deployed on ADI Chain (Abu Dhabi institutional-grade blockchain).</div>
+        <div class="card-campaign">⚡ Official FIFA prediction market, licensed product, global reach</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Polymarket</div><span class="tag tag-prediction">PREDICTION</span></div>
+        <div class="card-desc">Largest prediction market platform. World Cup winner market crossed $1.2B in total trading volume. $280M+ in liquidity. ~$30M daily activity.</div>
+        <div class="card-campaign">⚡ Massive organic campaign, integrates with Bitget Wallet for 90M users</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Chiliz / Socios.com</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Largest football-focused crypto ecosystem. Official partnerships with multiple qualified national teams. Portugal 🇵🇹, Belgium 🇧🇪 tokens active.</div>
+        <div class="card-campaign">⚡ Multiple national team tokens, voting, rewards, VIP fan experiences</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Crypto.com</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Highly visible through sweepstakes for match tickets, consumer promotions, and heavy advertising around major matches.</div>
+        <div class="card-campaign">⚡ Ticket giveaways, match experience sweepstakes, global ad campaign</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bitget Wallet</div><span class="tag tag-defi">WALLET / WEB3</span></div>
+        <div class="card-desc">Launched World Cup prediction market initiative with Polymarket, giving 90M users access to on-chain prediction markets tied to tournament.</div>
+        <div class="card-campaign">⚡ Polymarket integration, onboarding 90M users to on-chain predictions</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bitget Exchange</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Running active FIFA World Cup 2026 themed campaigns and trading competitions. La Liga partner (Bitget × La Liga since Sep 2024).</div>
+        <div class="card-campaign">⚡ WC trading tournaments, La Liga cross-promotion, ambassador campaigns</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Avalanche (AVAX)</div><span class="tag tag-infra">INFRASTRUCTURE</span></div>
+        <div class="card-desc">FIFA built its own custom Layer-1 blockchain on Avalanche in 2025. Hosts FIFA Collect NFTs, RTB tickets, and digital collectibles. 85K+ addresses at launch.</div>
+        <div class="card-campaign">⚡ FIFA Blockchain official infrastructure — Right-to-Buy NFT tickets, collectibles</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">FIFA Collect (Official NFT)</div><span class="tag tag-nft">NFT</span></div>
+        <div class="card-desc">FIFA's official digital collectibles platform migrated to its Avalanche blockchain. Right-to-Buy NFTs for WC ticket priority access. Several packs sold out.</div>
+        <div class="card-campaign">⚡ RTB NFT packs, secondary market trading, FIFA earns resale fees</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Sorare</div><span class="tag tag-nft">NFT / FANTASY</span></div>
+        <div class="card-desc">Fantasy football NFT platform with real-player cards. World Cup drives massive seasonal engagement and new user acquisition globally.</div>
+        <div class="card-campaign">⚡ World Cup fantasy leagues, NFT player card campaigns, global onboarding</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Myriad</div><span class="tag tag-prediction">PREDICTION</span></div>
+        <div class="card-desc">Launched a $100,000 World Cup trading competition powered by Chainlink oracle infrastructure. Active tournament-driven prediction platform.</div>
+        <div class="card-campaign">⚡ $100K trading competition, Chainlink-powered oracles, WC markets</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Kalshi</div><span class="tag tag-prediction">PREDICTION</span></div>
+        <div class="card-desc">Regulated US prediction market. Combined with Polymarket: $416.7M in WC winner market volume. Growing visibility around sports markets.</div>
+        <div class="card-campaign">⚡ Regulated WC prediction markets, US audience onboarding</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Coinstore</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Running FIFA World Cup 2026 community campaigns: BTC price predictions, social tasks, community discussions. Ecosystem partners: DOGW, ETHI, SDA, HBOX.</div>
+        <div class="card-campaign">⚡ Community prediction games, social tasks, ecosystem collaboration campaigns</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- USA / NORTH AMERICA -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇺🇸</span> USA / North America — Host Nation Hub</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Coinbase</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">US's largest crypto exchange leveraging home-turf advantage as USA co-hosts 2026. Running consumer onboarding and awareness campaigns around tournament.</div>
+        <div class="card-campaign">⚡ Home-field WC awareness campaigns, user acquisition, US fan engagement</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Kraken</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Active football sponsor (Tottenham Hotspur sleeve sponsor, Atlético Madrid). Running WC-aligned campaigns across existing football partnerships.</div>
+        <div class="card-campaign">⚡ Football-aligned digital campaigns, EPL x WC crossover content</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Chainlink (LINK)</div><span class="tag tag-infra">ORACLE / INFRA</span></div>
+        <div class="card-desc">Powering Myriad's $100K World Cup prediction tournament. Oracle infrastructure for sports data on-chain. Major WC data provider for DeFi protocols.</div>
+        <div class="card-campaign">⚡ Sports oracle campaigns, WC data feeds, DeFi prediction market infra</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">BC.Game</div><span class="tag tag-betting">CRYPTO CASINO</span></div>
+        <div class="card-desc">Launched $2M+ dedicated Football Cup 2026 campaign with $500K tournament leaderboard and 650 streak-free bets across group and knockout rounds.</div>
+        <div class="card-campaign">⚡ $2M+ Football Cup campaign, $500K leaderboard, 650 free bets</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">LuckyRollers</div><span class="tag tag-betting">CRYPTO CASINO</span></div>
+        <div class="card-desc">Top-ranked for WC 2026. Bundled 5 risk-free sports bets into welcome package with 35x wagering requirement for group-stage prediction campaigns.</div>
+        <div class="card-campaign">⚡ 5 risk-free WC bets, tournament welcome package, group-stage markets</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">CoinCasino</div><span class="tag tag-betting">CRYPTO CASINO</span></div>
+        <div class="card-desc">Active crypto sportsbook running World Cup themed promotions. Anonymous signup, rapid crypto payouts, WC tournament bonuses.</div>
+        <div class="card-campaign">⚡ WC bonus campaigns, anonymous betting, rapid crypto payouts</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UAE / MIDDLE EAST -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇦🇪</span> UAE / Middle East</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">ADI Chain / ADI Predictstreet</div><span class="tag tag-infra">BLOCKCHAIN / PREDICTION</span></div>
+        <div class="card-desc">Abu Dhabi-based institutional blockchain. ADI Predictstreet is FIFA's official prediction market partner — first-ever in FIFA history. Gibraltar licensed.</div>
+        <div class="card-campaign">⚡ Official FIFA prediction markets, institutional blockchain campaign, UAE launch</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">OKX</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Major football sponsor: Man City partner ($70M deal), Atlético Madrid. WC-aligned campaigns across all football partnerships. MENA + global push.</div>
+        <div class="card-campaign">⚡ Man City x WC crossover, MENA user campaigns, football ambassador content</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EUROPE -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇪🇺</span> Europe — Malta, Gibraltar, UK, EU</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Cloudbet</div><span class="tag tag-betting">CRYPTO BETTING</span></div>
+        <div class="card-desc">Running since 2013. Launched dedicated FIFA World Cup 2026 Hub with outright markets, group-stage lines, player props, live betting. Supports 30+ cryptos.</div>
+        <div class="card-campaign">⚡ WC 2026 Betting Hub, World Cup Betting Guide, 30+ crypto markets</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Lucky Block</div><span class="tag tag-betting">CRYPTO CASINO</span></div>
+        <div class="card-desc">Combined sportsbook + casino. No KYC, instant crypto payouts, 35–50+ sports including esports. Major WC 2026 welcome bonuses.</div>
+        <div class="card-campaign">⚡ Zero-KYC WC betting, instant payout campaigns, esports x football crossover</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Mega Dice</div><span class="tag tag-betting">CRYPTO CASINO</span></div>
+        <div class="card-desc">Preparing for massive WC 2026 betting volumes. Speed, privacy, and liquidity as core value props for crypto sports bettors.</div>
+        <div class="card-campaign">⚡ WC volume preparation campaign, crypto privacy betting, tournament promos</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Betpanda</div><span class="tag tag-betting">CRYPTO SPORTSBOOK</span></div>
+        <div class="card-desc">Top-rated crypto sportsbook for WC 2026. Anonymous signups, massive tournament welcome bonuses exceeding $30K, rapid payouts.</div>
+        <div class="card-campaign">⚡ $30K+ WC bonuses, anonymous betting campaign, fast payout marketing</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Cryptorino</div><span class="tag tag-betting">CRYPTO SPORTSBOOK</span></div>
+        <div class="card-desc">Crypto sportsbook with dedicated WC 2026 campaign. Competing in the European crypto betting market with aggressive WC promotions.</div>
+        <div class="card-campaign">⚡ WC 2026 dedicated campaign, EU-focused user acquisition</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Sportsbet.io</div><span class="tag tag-betting">CRYPTO SPORTSBOOK</span></div>
+        <div class="card-desc">iGaming company sponsoring World Snooker Tour and World Pool Championship. Running WC 2026 sports betting campaigns across all football markets.</div>
+        <div class="card-campaign">⚡ WC 2026 betting markets, snooker x football cross-promotion</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Binance</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Lazio jersey sponsor, past Ronaldo NFT deal. Running major WC 2026 content and campaign pushes across all markets. World's largest exchange.</div>
+        <div class="card-campaign">⚡ WC trading promotions, Lazio x WC campaigns, NFT collectible drops</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bitpanda</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Austrian exchange. Gaël Monfils (tennis) ambassador. Running European football x WC 2026 campaigns targeting EU retail investors.</div>
+        <div class="card-campaign">⚡ EU-focused WC campaigns, sports ambassador cross-promotion</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PORTUGAL / IBERIAN -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇵🇹</span> Portugal & Spain</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $POR Fan Token</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Portugal national team fan token on Chiliz Chain. Ronaldo's 6th World Cup driving massive engagement. Voting rights, VIP rewards for holders.</div>
+        <div class="card-campaign">⚡ $POR token campaign, Ronaldo WC hype, fan engagement mechanics</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bitget × La Liga</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Bitget signed La Liga partnership in Sep 2024. Running WC 2026 campaigns leveraging Spanish football fan base. Spain is a top WC contender.</div>
+        <div class="card-campaign">⚡ La Liga x WC crossover, Spanish market acquisition, Spain team campaigns</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BELGIUM / FRANCE / UK -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇧🇪</span>🇫🇷🇬🇧 Belgium, France & UK</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $BEL Fan Token</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Belgium recently launched their national fan token on Chiliz Chain ahead of WC 2026, following the trend started by Argentina and Portugal.</div>
+        <div class="card-campaign">⚡ Belgium fan token launch, community voting, WC match day engagement</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Kraken × Tottenham</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Tottenham Hotspur's official crypto partner with sleeve sponsorship. Running England WC fan campaigns across UK market.</div>
+        <div class="card-campaign">⚡ Spurs x England WC crossover, UK consumer crypto adoption campaign</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Crypto.com × PSG</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Crypto.com is PSG's partner. France is a top WC contender — leveraging PSG's Mbappé fan base for WC 2026 consumer campaigns.</div>
+        <div class="card-campaign">⚡ PSG x France x WC campaign, Mbappé content, French market push</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BRAZIL / LATAM -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇧🇷</span> Brazil & LATAM</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $BRA Fan Token</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Brazil national team fan token on Chiliz Chain. One of the most traded fan tokens globally. WC 2026 is a major engagement driver.</div>
+        <div class="card-campaign">⚡ $BRA token push, Brazil fan base engagement, WC prediction polls</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Mercado Bitcoin</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Brazil's largest crypto exchange. Running WC 2026 themed promotions targeting Brazil's massive football-obsessed user base.</div>
+        <div class="card-campaign">⚡ Brazil WC campaigns, local fan engagement, trading bonus events</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Ripio</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">LATAM-focused crypto exchange (Argentina, Brazil, Mexico). Running WC 2026 campaigns across all three host-adjacent LATAM markets.</div>
+        <div class="card-campaign">⚡ LATAM WC campaign, multi-country football fan engagement</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASIA -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇸🇬</span>🇨🇳🇯🇵 Asia — Singapore, China, Japan, Korea</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Ant International (AliPay+)</div><span class="tag tag-infra">FINTECH / WEB3</span></div>
+        <div class="card-desc">Alipay parent company's international arm became Official Argentina WC Sponsor for Asia region. Bridging Web3 payments and football for Asian fans.</div>
+        <div class="card-campaign">⚡ Asia-region WC payments campaign, Alipay+ football promotions</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bybit</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Singapore-based exchange. AFA official partner, Borussia Dortmund sponsor, Red Bull Racing. Active Asia-Pacific WC 2026 campaigns.</div>
+        <div class="card-campaign">⚡ AFA x WC campaign, APAC user acquisition, BvB x WC crossover</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">OKX</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Hong Kong/Seychelles-based. Iga Świątek ambassador, Man City x WC, Atlético Madrid. Major Asia-Pacific WC consumer campaign.</div>
+        <div class="card-campaign">⚡ Pan-Asian WC campaigns, Man City Champions, crypto education</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Coinstore</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Singapore-based exchange running community WC 2026 campaigns with ecosystem partners. BTC price prediction events, social tasks tied to tournament.</div>
+        <div class="card-campaign">⚡ SE Asia community campaigns, WC prediction events, ecosystem partner promos</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $JPN / $KOR Fan Tokens</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Japan and South Korea national team tokens on Chiliz Chain. Both nations qualified for WC 2026 driving fan token engagement campaigns in Asia.</div>
+        <div class="card-campaign">⚡ Japan/Korea fan campaigns, WC qualification celebration, token voting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEXICO / CANADA -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🇲🇽</span>🇨🇦 Mexico & Canada — Co-Host Nations</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Bitso</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Mexico's leading crypto exchange. Home-field advantage as Mexico co-hosts WC 2026. Running massive local campaigns targeting Mexico football fanbase.</div>
+        <div class="card-campaign">⚡ Host nation WC campaign, Mexican market dominance, remittance x crypto</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Newton</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Canada's crypto exchange. Canada co-hosting WC 2026 for the first time — massive national pride campaign opportunity being capitalized on.</div>
+        <div class="card-campaign">⚡ Canada WC host campaign, first-time qualifier celebration, local push</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $MEX Fan Token</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Mexico national team fan token. Co-host status amplifies campaign — "El Tri" fans can participate in voting and rewards while watching at home.</div>
+        <div class="card-campaign">⚡ $MEX token home-field campaign, host nation fan engagement, WC voting</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AFRICA -->
+  <div class="country-block">
+    <div class="country-label"><span class="flag">🌍</span> Africa — Morocco, Nigeria, Senegal</div>
+    <div class="cards-grid">
+      <div class="card">
+        <div class="card-head"><div class="company-name">Yellow Card</div><span class="tag tag-exchange">EXCHANGE</span></div>
+        <div class="card-desc">Africa's leading crypto exchange operating across 20+ African countries. Running WC 2026 campaigns tied to African qualified teams (Morocco, Senegal, Nigeria).</div>
+        <div class="card-campaign">⚡ Pan-African WC campaign, mobile-first crypto, football fan acquisition</div>
+      </div>
+      <div class="card">
+        <div class="card-head"><div class="company-name">Socios $MAR Fan Token</div><span class="tag tag-fan">FAN TOKEN</span></div>
+        <div class="card-desc">Morocco fan token following their historic 2022 semi-final run. Arab world's top football nation with a massive fan token following heading into 2026.</div>
+        <div class="card-campaign">⚡ Morocco fan token WC campaign, Arab world football engagement</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- SUMMARY TABLE PANEL -->
+<div class="panel" id="panel-summary">
+  <div class="section-header">
+    <div>
+      <h2>Full Company List — 50+ Web3 FIFA 2026 Players</h2>
+      <div class="section-desc">Quick-reference table of all companies, their country/HQ, campaign type, and key action</div>
+    </div>
+  </div>
+  <div style="overflow-x:auto;">
+  <table class="summary-table">
+    <thead><tr>
+      <th>#</th><th>Company</th><th>HQ / Country</th><th>Type</th><th>FIFA 2026 Campaign Action</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>1</td><td class="company-cell">LBank</td><td class="country-cell">🇨🇳 China</td><td><span class="tag tag-exchange">Exchange</span></td><td>$100M reward pool, AFA regional sponsor</td></tr>
+      <tr><td>2</td><td class="company-cell">Nexo</td><td class="country-cell">🇧🇬 Bulgaria/Global</td><td><span class="tag tag-defi">DeFi/CeFi</span></td><td>AFA Official Digital Asset Partner, ticket giveaways</td></tr>
+      <tr><td>3</td><td class="company-cell">Bybit</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>AFA official partner, Argentina x WC campaigns</td></tr>
+      <tr><td>4</td><td class="company-cell">BingX</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>Enzo Fernández global ambassador deal</td></tr>
+      <tr><td>5</td><td class="company-cell">Ant International</td><td class="country-cell">🇨🇳 China</td><td><span class="tag tag-infra">Fintech</span></td><td>AFA official sponsor for Asia region</td></tr>
+      <tr><td>6</td><td class="company-cell">ADI Predictstreet</td><td class="country-cell">🇦🇪 UAE (Abu Dhabi)</td><td><span class="tag tag-prediction">Prediction</span></td><td>FIFA's OFFICIAL prediction market partner</td></tr>
+      <tr><td>7</td><td class="company-cell">Polymarket</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-prediction">Prediction</span></td><td>$1.2B WC winner market, global campaign</td></tr>
+      <tr><td>8</td><td class="company-cell">Chiliz / Socios</td><td class="country-cell">🇲🇹 Malta</td><td><span class="tag tag-fan">Fan Token</span></td><td>Multiple national team fan tokens, global</td></tr>
+      <tr><td>9</td><td class="company-cell">Crypto.com</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>WC sweepstakes, ticket giveaways, PSG link</td></tr>
+      <tr><td>10</td><td class="company-cell">Bitget Wallet</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-defi">Wallet</span></td><td>Polymarket integration, 90M user WC push</td></tr>
+      <tr><td>11</td><td class="company-cell">Bitget Exchange</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>La Liga partner, WC trading competitions</td></tr>
+      <tr><td>12</td><td class="company-cell">Avalanche (AVAX)</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-infra">Infra/L1</span></td><td>FIFA Blockchain host chain, RTB NFT infra</td></tr>
+      <tr><td>13</td><td class="company-cell">Sorare</td><td class="country-cell">🇫🇷 France</td><td><span class="tag tag-nft">NFT/Fantasy</span></td><td>Fantasy WC leagues, NFT player card campaigns</td></tr>
+      <tr><td>14</td><td class="company-cell">Myriad</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-prediction">Prediction</span></td><td>$100K WC trading competition, Chainlink oracles</td></tr>
+      <tr><td>15</td><td class="company-cell">Kalshi</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-prediction">Prediction</span></td><td>Regulated WC prediction markets, US launch</td></tr>
+      <tr><td>16</td><td class="company-cell">Coinstore</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>Community WC prediction campaigns, pizza day bridge</td></tr>
+      <tr><td>17</td><td class="company-cell">Coinbase</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-exchange">Exchange</span></td><td>Home-turf WC awareness, US fan onboarding</td></tr>
+      <tr><td>18</td><td class="company-cell">Kraken</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-exchange">Exchange</span></td><td>Tottenham/Atlético sleeve sponsor, UK WC campaigns</td></tr>
+      <tr><td>19</td><td class="company-cell">Chainlink</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-infra">Oracle/Infra</span></td><td>Sports data oracles for WC prediction markets</td></tr>
+      <tr><td>20</td><td class="company-cell">BC.Game</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Casino</span></td><td>$2M+ Football Cup 2026 campaign, $500K leaderboard</td></tr>
+      <tr><td>21</td><td class="company-cell">LuckyRollers</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Casino</span></td><td>5 risk-free WC bets welcome package</td></tr>
+      <tr><td>22</td><td class="company-cell">Cloudbet</td><td class="country-cell">🇬🇮 Gibraltar</td><td><span class="tag tag-betting">Crypto Betting</span></td><td>Dedicated WC 2026 Hub, 30+ crypto support</td></tr>
+      <tr><td>23</td><td class="company-cell">Lucky Block</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Casino</span></td><td>Zero-KYC WC betting, instant payouts</td></tr>
+      <tr><td>24</td><td class="company-cell">Mega Dice</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Casino</span></td><td>WC volume campaigns, privacy-first betting</td></tr>
+      <tr><td>25</td><td class="company-cell">Betpanda</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Sportsbook</span></td><td>$30K+ WC bonus campaign</td></tr>
+      <tr><td>26</td><td class="company-cell">Cryptorino</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Sportsbook</span></td><td>WC 2026 EU-focused acquisition campaign</td></tr>
+      <tr><td>27</td><td class="company-cell">Sportsbet.io</td><td class="country-cell">🇮🇴 Global</td><td><span class="tag tag-betting">Crypto Sportsbook</span></td><td>Snooker/pool sponsor, WC betting campaigns</td></tr>
+      <tr><td>28</td><td class="company-cell">Binance</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-exchange">Exchange</span></td><td>Lazio jersey sponsor, WC trading promotions</td></tr>
+      <tr><td>29</td><td class="company-cell">Bitpanda</td><td class="country-cell">🇦🇹 Austria</td><td><span class="tag tag-exchange">Exchange</span></td><td>EU WC campaigns, sports ambassador (Monfils)</td></tr>
+      <tr><td>30</td><td class="company-cell">OKX</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-exchange">Exchange</span></td><td>Man City x WC, Atlético sponsor, MENA push</td></tr>
+      <tr><td>31</td><td class="company-cell">CoinCasino</td><td class="country-cell">🌐 Global</td><td><span class="tag tag-betting">Crypto Casino</span></td><td>WC bonuses, anonymous signup campaign</td></tr>
+      <tr><td>32</td><td class="company-cell">Socios $POR Token</td><td class="country-cell">🇵🇹 Portugal</td><td><span class="tag tag-fan">Fan Token</span></td><td>Portugal WC campaign, Ronaldo hype engagement</td></tr>
+      <tr><td>33</td><td class="company-cell">Socios $BEL Token</td><td class="country-cell">🇧🇪 Belgium</td><td><span class="tag tag-fan">Fan Token</span></td><td>Belgium new fan token WC launch campaign</td></tr>
+      <tr><td>34</td><td class="company-cell">Socios $BRA Token</td><td class="country-cell">🇧🇷 Brazil</td><td><span class="tag tag-fan">Fan Token</span></td><td>Brazil fan token, LATAM WC fan engagement</td></tr>
+      <tr><td>35</td><td class="company-cell">Socios $ARG Token</td><td class="country-cell">🇦🇷 Argentina</td><td><span class="tag tag-fan">Fan Token</span></td><td>Defending champion fan token, $ARG campaign</td></tr>
+      <tr><td>36</td><td class="company-cell">Socios $MEX Token</td><td class="country-cell">🇲🇽 Mexico</td><td><span class="tag tag-fan">Fan Token</span></td><td>Mexico co-host fan token, El Tri campaign</td></tr>
+      <tr><td>37</td><td class="company-cell">Socios $MAR Token</td><td class="country-cell">🇲🇦 Morocco</td><td><span class="tag tag-fan">Fan Token</span></td><td>Morocco WC fan token, Arab world campaign</td></tr>
+      <tr><td>38</td><td class="company-cell">Socios $JPN Token</td><td class="country-cell">🇯🇵 Japan</td><td><span class="tag tag-fan">Fan Token</span></td><td>Japan WC fan token, Asia engagement</td></tr>
+      <tr><td>39</td><td class="company-cell">Socios $KOR Token</td><td class="country-cell">🇰🇷 South Korea</td><td><span class="tag tag-fan">Fan Token</span></td><td>South Korea WC fan token, Korea campaign</td></tr>
+      <tr><td>40</td><td class="company-cell">Mercado Bitcoin</td><td class="country-cell">🇧🇷 Brazil</td><td><span class="tag tag-exchange">Exchange</span></td><td>Brazil WC user campaigns, local market</td></tr>
+      <tr><td>41</td><td class="company-cell">Ripio</td><td class="country-cell">🇦🇷 Argentina</td><td><span class="tag tag-exchange">Exchange</span></td><td>LATAM multi-country WC campaign</td></tr>
+      <tr><td>42</td><td class="company-cell">Bitso</td><td class="country-cell">🇲🇽 Mexico</td><td><span class="tag tag-exchange">Exchange</span></td><td>Mexico host-nation WC campaign, local push</td></tr>
+      <tr><td>43</td><td class="company-cell">Newton</td><td class="country-cell">🇨🇦 Canada</td><td><span class="tag tag-exchange">Exchange</span></td><td>Canada co-host WC campaign, first qualifier celebration</td></tr>
+      <tr><td>44</td><td class="company-cell">Yellow Card</td><td class="country-cell">🌍 Africa</td><td><span class="tag tag-exchange">Exchange</span></td><td>Pan-African WC campaigns (Morocco, Nigeria, Senegal)</td></tr>
+      <tr><td>45</td><td class="company-cell">FIFA Collect (NFT)</td><td class="country-cell">🌐 FIFA/Global</td><td><span class="tag tag-nft">NFT</span></td><td>RTB NFT tickets, WC collectibles on Avalanche</td></tr>
+      <tr><td>46</td><td class="company-cell">Crypto.com × PSG</td><td class="country-cell">🇫🇷 France</td><td><span class="tag tag-exchange">Exchange</span></td><td>PSG x France x WC crossover campaign</td></tr>
+      <tr><td>47</td><td class="company-cell">Kraken × Tottenham</td><td class="country-cell">🇬🇧 UK</td><td><span class="tag tag-exchange">Exchange</span></td><td>England WC crossover, UK market campaign</td></tr>
+      <tr><td>48</td><td class="company-cell">Vechain</td><td class="country-cell">🇸🇬 Singapore</td><td><span class="tag tag-infra">Blockchain</span></td><td>Sports data blockchain, WC supply-chain integration</td></tr>
+      <tr><td>49</td><td class="company-cell">Algorand</td><td class="country-cell">🇺🇸 USA</td><td><span class="tag tag-infra">Blockchain</span></td><td>Past FIFA partner (2022), WC-adjacent campaigns</td></tr>
+      <tr><td>50</td><td class="company-cell">Socios $FRA Token</td><td class="country-cell">🇫🇷 France</td><td><span class="tag tag-fan">Fan Token</span></td><td>France fan token, top WC contender campaign</td></tr>
+      <tr><td>51</td><td class="company-cell">Socios $ENG Token</td><td class="country-cell">🇬🇧 England</td><td><span class="tag tag-fan">Fan Token</span></td><td>England fan token, Three Lions WC campaign</td></tr>
+      <tr><td>52</td><td class="company-cell">Socios $ESP Token</td><td class="country-cell">🇪🇸 Spain</td><td><span class="tag tag-fan">Fan Token</span></td><td>Spain fan token (defending Euros champ) WC campaign</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- EMAIL PANEL -->
+<div class="panel" id="panel-email">
+  <div class="section-header">
+    <div>
+      <h2>Ready-to-Send Outreach Email</h2>
+      <div class="section-desc">Personalized pitch for projects running FIFA 2026 campaigns. Customize the [brackets] before sending.</div>
+    </div>
+  </div>
+
+  <div class="email-card">
+    <div class="email-header">
+      <div>
+        <div class="email-meta">TO: <span>[Marketing Lead / CMO / Partnerships Head]</span></div>
+        <div class="email-meta" style="margin-top:4px;">FROM: <span>[Your Name] — [Your Company]</span></div>
+      </div>
+      <button class="copy-btn" onclick="copyEmail()">📋 Copy Email</button>
+    </div>
+    <div class="email-body" id="email-content">
+      <div class="email-subject">Subject: FIFA 2026 is your biggest acquisition window — here's how we can amplify your campaign 🏆</div>
+
+      <p>Hi <strong>[First Name]</strong>,</p>
+
+      <p>I saw that <strong>[Company Name]</strong> is running a [World Cup campaign / fan token push / prediction market / WC trading promotion] for FIFA 2026 — smart move. With 5 billion+ engagements expected and the tournament kicking off June 11, you're sitting on the biggest Web3 marketing moment of the decade.</p>
+
+      <p>We've built a dedicated <strong>FIFA 2026 Web3 Offer Page</strong> that is live right now and driving a highly engaged audience of crypto-native football fans — exactly the users you want converting on your [campaign / token / platform].</p>
+
+      <p><strong>Here's what we're offering:</strong></p>
+      <ul class="bullet-list">
+        <li>Premium placement on our FIFA 2026 × Web3 campaign hub (targeting [X]K monthly crypto + football fans)</li>
+        <li>Co-branded content — match-day activations, prediction posts, countdown campaigns</li>
+        <li>Dedicated email blast to our [X]K subscriber base tied to your campaign dates</li>
+        <li>Social amplification across Twitter/X, Telegram, and Discord during live match windows</li>
+        <li>Performance-based options — CPA, rev share, or flat placement depending on your preference</li>
+      </ul>
+
+      <p>We're specifically curating this page around companies like <strong>[Company Name]</strong> that have real skin in the game — not generic crypto ads, but contextual placements that feel native to what fans are already searching for during the tournament.</p>
+
+      <p>The window is tight. With the group stages running June 11 – July 2, <strong>the biggest traffic spikes are in the next 30 days</strong>. We're onboarding a limited number of partners to keep quality high.</p>
+
+      <p>Would a 15-minute call this week work? Happy to share our traffic data and walk you through placement options that fit your existing <strong>[AFA sponsorship / fan token campaign / prediction market / WC promotion]</strong> goals.</p>
+
+      <p>Looking forward to it,</p>
+      <p><strong>[Your Name]</strong><br>
+      [Title] | [Company]<br>
+      [Email] | [Telegram/Twitter handle]</p>
+
+      <p style="font-size:11px; color:var(--muted); margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
+        P.S. — If you'd like to see the offer page before the call, reply and I'll send the link. We're featuring [5 / 10] partners and keeping it exclusive to serious campaigns only.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- STRATEGY PANEL -->
+<div class="panel" id="panel-strategy">
+  <div class="section-header">
+    <div>
+      <h2>Pitch Strategy Guide</h2>
+      <div class="section-desc">How to segment and approach each company type for maximum conversion</div>
+    </div>
+  </div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-head"><div class="company-name">🏆 Tier 1: National Team Sponsors</div><span class="tag tag-exchange">HIGHEST PRIORITY</span></div>
+      <div class="card-desc"><strong>Who:</strong> LBank, Nexo, Bybit, BingX, Ant International</div>
+      <div class="card-campaign">These have committed $100M+ to WC campaigns. They NEED distribution. Lead with reach, engagement rates, and match-day timing. Emphasize your audience is crypto-native football fans — their exact target. Ask for a rev-share or CPA deal tied to their existing promo.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="company-name">🎯 Tier 2: Prediction Markets</div><span class="tag tag-prediction">HIGH VOLUME</span></div>
+      <div class="card-desc"><strong>Who:</strong> Polymarket, Kalshi, ADI Predictstreet, Myriad</div>
+      <div class="card-campaign">$1.2B+ in market volume means user acquisition is their #1 KPI. Pitch traffic, qualified clicks, and referral links. Prediction platforms convert well from content pages — offer dedicated prediction-market placements, match previews with their odds embedded.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="company-name">⚽ Tier 3: Fan Token Platforms</div><span class="tag tag-fan">ENGAGEMENT PLAY</span></div>
+      <div class="card-desc"><strong>Who:</strong> Chiliz, Socios, all $ARG/$POR/$BRA etc. tokens</div>
+      <div class="card-campaign">Fan tokens live and die by community engagement. Pitch co-created content: "vote on our page," prediction polls, fan token spotlight articles. They want votes and holders, not just brand exposure. Offer community-driven campaigns.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="company-name">🎰 Tier 4: Crypto Betting/Casinos</div><span class="tag tag-betting">HIGH BUDGET</span></div>
+      <div class="card-desc"><strong>Who:</strong> BC.Game, Cloudbet, Lucky Block, Betpanda, Sportsbet.io</div>
+      <div class="card-campaign">These companies have massive marketing budgets for WC season. They know CPAs and pay well. Lead with your audience demographics, geo breakdown, and whether you can offer affiliate/sub-affiliate structures. They're experienced buyers — be direct with data.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="company-name">🔧 Tier 5: Infrastructure / Blockchain</div><span class="tag tag-infra">BRAND AWARENESS</span></div>
+      <div class="card-desc"><strong>Who:</strong> Avalanche, Chainlink, Algorand, Vechain</div>
+      <div class="card-campaign">These are buying brand awareness, not direct conversions. Pitch editorial coverage, "FIFA runs on Avalanche" explainer content, long-form educational placement. Flat fee or sponsored content deals work best here.</div>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="company-name">📧 Personalization Tips</div><span class="tag tag-nft">BEST PRACTICE</span></div>
+      <div class="card-desc">Always reference their SPECIFIC campaign before pitching</div>
+      <div class="card-campaign">Mention: their exact sponsor deal / the player ambassador they signed / their token name / their WC promotion details. Nothing kills a B2B pitch faster than it feeling copy-pasted. Use the campaign data in this database to show you did your homework.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:28px; padding:20px; background:var(--surface); border:1px solid rgba(0,245,122,0.2); border-radius:12px;">
+    <div style="font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--green); margin-bottom:12px;">⏱ URGENCY WINDOW</div>
+    <p style="color:rgba(232,236,244,0.85); font-size:13px; line-height:1.8;">
+      Tournament starts <strong>June 11, 2026</strong>. Group stages run June 11 – July 2. Round of 16 starts July 4. Quarter-finals July 11–14. Final August 3rd.<br><br>
+      <strong>Peak traffic windows to sell around:</strong> Group stage openers (June 11-15), "knockout drama" week (July 4-7), semi-finals (July 28-31), and the Final (Aug 3). 
+      For time-sensitive deals, lead with group-stage packages first — they're easiest to sell and build the relationship for knockout round upsells.
+    </p>
+  </div>
+</div>
+
+<div style="height:60px;"></div>
+
+<script>
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function copyEmail() {
+  const content = document.getElementById('email-content').innerText;
+  navigator.clipboard.writeText(content).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = '✅ Copied!';
+    setTimeout(() => btn.textContent = '📋 Copy Email', 2000);
+  });
+}
+</script>
+</body>
+</html>
